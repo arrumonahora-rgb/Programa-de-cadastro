@@ -37,7 +37,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="txtAlterarProduto">
+   <widget class="QLineEdit" name="txtalterarProd">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -78,7 +78,7 @@
      <string notr="true">color: rgb(0, 0, 255);</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="txtAlterarPreco">
+   <widget class="QLineEdit" name="txtalterarPreco">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -97,7 +97,7 @@
      <string notr="true">color: rgb(0, 0, 255);</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="txtAlterarEstoque">
+   <widget class="QLineEdit" name="txtalterarEstoque">
     <property name="geometry">
      <rect>
       <x>10</x>
