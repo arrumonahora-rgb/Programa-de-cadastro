@@ -10,6 +10,21 @@ conexao = mysql.connector.connect(
     database="cadastro_produtos"
 )
 
+# Corrigido: Alterado 'lista' para 'janela_lista' para manter consistência
+def excluir():
+    remover = janela_lista.tableWidget.currentRow()
+    if remover != -1: # Verifica se algo está selecionado
+        cursor = conexao.cursor()
+        cursor.execute('SELECT id FROM produtos')
+        leitura_banco = cursor.fetchall()
+        valor_id = leitura_banco[remover][0]
+        
+        cursor.execute('DELETE FROM produtos WHERE id = %s', (valor_id,))
+        conexao.commit()
+        cursor.close()
+        
+        janela_lista.tableWidget.removeRow(remover)
+
 # Variável global
 numero_id = 0
 
@@ -18,20 +33,21 @@ def editar():
     global numero_id
     linha_selecionada = janela_lista.tableWidget.currentRow() 
     
-    valor_id = janela_lista.tableWidget.item(linha_selecionada, 0).text()    
-    cursor = conexao.cursor()
-    cursor.execute('SELECT * FROM produtos WHERE id = %s', (valor_id,))
-    leitura_banco = cursor.fetchall()    
-    cursor.close() 
-    
-    janela_editar.show()
-    numero_id = valor_id
-    
-    # Preenche os campos de texto (Body direto)
-    janela_editar.txtalterarId.setText(str(leitura_banco[0][0]))
-    janela_editar.txtalterarProd.setText(str(leitura_banco[0][1]))
-    janela_editar.txtalterarPreco.setText(str(leitura_banco[0][2]))
-    janela_editar.txtalterarEstoque.setText(str(leitura_banco[0][3]))    
+    if linha_selecionada != -1: # Verifica se algo está selecionado
+        valor_id = janela_lista.tableWidget.item(linha_selecionada, 0).text()    
+        cursor = conexao.cursor()
+        cursor.execute('SELECT * FROM produtos WHERE id = %s', (valor_id,))
+        leitura_banco = cursor.fetchall()    
+        cursor.close() 
+        
+        janela_editar.show()
+        numero_id = valor_id
+        
+        # Preenche os campos de texto
+        janela_editar.txtalterarId.setText(str(leitura_banco[0][0]))
+        janela_editar.txtalterarProd.setText(str(leitura_banco[0][1]))
+        janela_editar.txtalterarPreco.setText(str(leitura_banco[0][2]))
+        janela_editar.txtalterarEstoque.setText(str(leitura_banco[0][3]))    
             
 # Atualizar dados
 def salvar_dados():
@@ -51,9 +67,9 @@ def salvar_dados():
     
     janela_editar.close()
     janela_lista.close()
-    window.show() 
+    # window.show() # Opcional: reabre a janela principal
     
-    abrir_lista() 
+    abrir_lista() # Atualiza a lista após salvar
     numero_id = 0
 
 # Função abrir lista
@@ -100,6 +116,7 @@ window.btnCadastrar.clicked.connect(inserir)
 window.btnRelatorio.clicked.connect(abrir_lista)
 janela_lista.btnAlterar.clicked.connect(editar)
 janela_editar.btnSalvarDados.clicked.connect(salvar_dados)
+janela_lista.btnApagar.clicked.connect(excluir)
 
 window.show()
 sys.exit(app.exec())
